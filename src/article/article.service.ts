@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from './interfaces/article.interface';
-import { CreatePostDTO } from './dto/create-post.dto';
+import { CreateArticleDTO } from './dto/create-article.dto';
 import { parseHTML } from './helpers/article-parser';
 
 @Injectable()
@@ -21,8 +21,8 @@ export class ArticleService {
     return article;
   }
 
-  async addArticle(createPostDTO: CreatePostDTO): Promise<Article> {
-    const newArticle = await this.articleModel(createPostDTO);
+  async addArticle(createArticleDTO: CreateArticleDTO): Promise<Article> {
+    const newArticle = await this.articleModel(createArticleDTO);
     return newArticle.save();
   }
   async parseArticle(id: string): Promise<Article> {

@@ -12,8 +12,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { CreatePostDTO } from './dto/create-post.dto';
-import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
+import { CreateArticleDTO } from './dto/create-article.dto';
+import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 
 @Controller('article')
 export class ArticleController {
@@ -35,8 +35,8 @@ export class ArticleController {
   }
 
   @Post('/add')
-  async addArticle(@Res() res, @Body() createPostDTO: CreatePostDTO) {
-    const newArticle = await this.articleService.addArticle(createPostDTO);
+  async addArticle(@Res() res, @Body() createArticleDTO: CreateArticleDTO) {
+    const newArticle = await this.articleService.addArticle(createArticleDTO);
     this.articleService.parseArticle(newArticle._id);
     return res.status(HttpStatus.OK).json({
       message: 'Article added successfully!',
