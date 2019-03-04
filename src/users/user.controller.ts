@@ -18,7 +18,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 
 @Controller('user')
-export class ArticleController {
+export class UserController {
   constructor(private usersService: UserService) {}
 
   @Get('get/:id')
