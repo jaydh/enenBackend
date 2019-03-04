@@ -1,7 +1,6 @@
 export class CreatePostDTO {
-  readonly id: string;
-  readonly link: string;
+  readonly url: string;
   readonly metadata?: any;
-  readonly HTMLData?: string;
+  readonly HTML?: {};
   readonly fetching?: boolean;
 }

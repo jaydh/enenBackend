@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
 
 export interface Article extends Document {
-  readonly id: string;
-  readonly link: string;
+  readonly url: string;
   readonly metadata?: any;
-  readonly HTMLData?: string;
+  readonly HTML?: {};
   readonly fetching?: boolean;
+  readonly _id: string;
 }

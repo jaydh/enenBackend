@@ -26,11 +26,8 @@ export class ArticleController {
   }
 
   @Get('get/:id')
-  async getArticle(
-    @Res() res,
-    @Param('articleID', new ValidateObjectId()) articleID,
-  ) {
-    const article = await this.articleService.getArticle(articleID);
+  async getArticle(@Res() res, @Param('id', new ValidateObjectId()) id) {
+    const article = await this.articleService.getArticle(id);
     if (!article) {
       throw new NotFoundException('Article does not exist!');
     }
@@ -40,6 +37,7 @@ export class ArticleController {
   @Post('/add')
   async addArticle(@Res() res, @Body() createPostDTO: CreatePostDTO) {
     const newArticle = await this.articleService.addArticle(createPostDTO);
+    this.articleService.parseArticle(newArticle._id);
     return res.status(HttpStatus.OK).json({
       message: 'Article added successfully!',
       article: newArticle,

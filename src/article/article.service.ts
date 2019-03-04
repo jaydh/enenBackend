@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from './interfaces/article.interface';
 import { CreatePostDTO } from './dto/create-post.dto';
+import { parseHTML } from './helpers/article-parser';
 
 @Injectable()
 export class ArticleService {
@@ -16,12 +17,20 @@ export class ArticleService {
   }
 
   async getArticle(articleID): Promise<Article> {
-    const post = await this.articleModel.findById(articleID).exec();
-    return post;
+    const article = await this.articleModel.findById(articleID).exec();
+    return article;
   }
 
   async addArticle(createPostDTO: CreatePostDTO): Promise<Article> {
-    const newPost = await this.articleModel(createPostDTO);
-    return newPost.save();
+    const newArticle = await this.articleModel(createPostDTO);
+    return newArticle.save();
+  }
+  async parseArticle(id: string): Promise<Article> {
+    const article = await this.articleModel.findById(id);
+    article.fetching = true;
+    await article.save();
+    article.HTML = await parseHTML(article.url);
+    article.fetching = false;
+    return article.save();
   }
 }
