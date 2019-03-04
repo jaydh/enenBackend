@@ -12,7 +12,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard, PassportModule } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
@@ -22,7 +22,6 @@ export class UserController {
   constructor(private usersService: UserService) {}
 
   @Get('get/:id')
-  @UseGuards(AuthGuard())
   async getArticle(@Res() res, @Param('id', new ValidateObjectId()) id) {
     const user = await this.usersService.getUser(id);
     if (!user) {
