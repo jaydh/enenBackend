@@ -4,5 +4,5 @@ export const UserSchema = new mongoose.Schema({
   email: String,
   password: String,
   passwordHash: String,
-  articleIDs: Array,
+  articles: Array,
 });

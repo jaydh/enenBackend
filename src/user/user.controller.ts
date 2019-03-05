@@ -23,8 +23,12 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('save/')
-  async saveArticle(@Res() res, @Body() body: any) {
-    const article = await this.userService.saveArticle(body);
+  async saveArticle(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { url: string },
+  ) {
+    const article = await this.userService.saveArticle(body, user);
     return res.status(HttpStatus.OK).json(article);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../article/interfaces/article.interface';
+import { UserArticle } from './interfaces/userArticle.interface';
 import { User } from './interfaces/user.interface';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { ArticleService } from '../article/article.service';
@@ -35,26 +36,25 @@ export class UserService {
     return user;
   }
 
-  public async saveArticle(body: any): Promise<User> {
-    const { url, uid } = await body;
-    const user = await this.userModel.findById(uid).exec();
-
+  public async saveArticle(body: { url: string }, user: User): Promise<User> {
+    const { url } = await body;
+    const now = new Date().getTime();
+    const userM = await this.userModel.findById(user._id).exec();
     let article = await this.articleService.getArticleByUrl(url);
     if (!article) {
       article = await this.articleService.addArticle({ url });
     }
     // No dupes
-    if (user && !this.articleExists(user, article._id)) {
-      user.articleIDs.push(article._id);
-      user.save();
+    if (user && !this.articleExists(userM, article._id)) {
+      userM.articles.push({ id: article._id, addedAt: now });
+      userM.save();
     }
-    return user;
+    return userM;
   }
 
   private articleExists(user: User, id: ObjectId): boolean {
     return (
-      user.articleIDs.find((t: ObjectId) => t.toString() === id.toString()) !==
-      undefined
+      user.articles.find((t: UserArticle) => id.equals(t.id)) !== undefined
     );
   }
 
