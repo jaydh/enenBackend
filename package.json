@@ -25,6 +25,7 @@
     "@nestjs/jwt": "^0.3.0",
     "@nestjs/mongoose": "^5.2.2",
     "@nestjs/passport": "^5.1.0",
+    "bcrypt": "^3.0.4",
     "jsdom": "^13.2.0",
     "mongoose": "^5.4.16",
     "next-auth": "^1.12.1",

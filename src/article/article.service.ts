@@ -16,8 +16,13 @@ export class ArticleService {
     return posts;
   }
 
-  async getArticle(articleID): Promise<Article> {
+  async getArticle(articleID: string): Promise<Article> {
     const article = await this.articleModel.findById(articleID).exec();
+    return article;
+  }
+
+  async getArticleByUrl(url: string): Promise<Article> {
+    const article = await this.articleModel.findOne({ url }).exec();
     return article;
   }
 

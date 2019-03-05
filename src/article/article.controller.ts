@@ -34,7 +34,7 @@ export class ArticleController {
     return res.status(HttpStatus.OK).json(article);
   }
 
-  @Post('/add')
+  @Post('add')
   async addArticle(@Res() res, @Body() createArticleDTO: CreateArticleDTO) {
     const newArticle = await this.articleService.addArticle(createArticleDTO);
     this.articleService.parseArticle(newArticle._id);
