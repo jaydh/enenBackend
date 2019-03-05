@@ -43,6 +43,7 @@ export class UserService {
     let article = await this.articleService.getArticleByUrl(url);
     if (!article) {
       article = await this.articleService.addArticle({ url });
+      this.articleService.parseArticle(article._id);
     }
     // No dupes
     if (user && !this.articleExists(userM, article._id)) {
