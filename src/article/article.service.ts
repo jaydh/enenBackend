@@ -11,11 +11,6 @@ export class ArticleService {
     @InjectModel('Article') private readonly articleModel: Model<Article>,
   ) {}
 
-  async getArticles(): Promise<Article[]> {
-    const posts = await this.articleModel.find().exec();
-    return posts;
-  }
-
   async getArticle(articleID: string): Promise<Article> {
     const article = await this.articleModel.findById(articleID).exec();
     return article;
@@ -27,14 +22,28 @@ export class ArticleService {
   }
 
   async addArticle(createArticleDTO: CreateArticleDTO): Promise<Article> {
-    const newArticle = await this.articleModel(createArticleDTO);
-    return newArticle.save();
+    let article = await this.articleModel
+      .findOne({
+        url: createArticleDTO.url,
+      })
+      .exec();
+
+    // Create article if not found in database
+    if (!article) {
+      article = await this.articleModel(createArticleDTO);
+      await article.save();
+      // Intentionally not waiting for parse to return article id to user
+      this.parseArticle(article._id);
+    }
+    return article;
   }
   async parseArticle(id: string): Promise<Article> {
     const article = await this.articleModel.findById(id);
     article.fetching = true;
     await article.save();
-    article.HTML = await parseHTML(article.url);
+    const { HTML, metadata } = await parseHTML(article.url);
+    article.HTML = HTML;
+    article.metadata = metadata;
     article.fetching = false;
     return article.save();
   }

@@ -22,18 +22,68 @@ import { User } from '../user/interfaces/user.interface';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('save/')
+  @Post('save')
   async saveArticle(
     @Res() res,
     @Usr() user: User,
     @Body() body: { url: string },
   ) {
+    // tslint:disable:no-console
+    console.log(body);
     const article = await this.userService.saveArticle(body, user);
     return res.status(HttpStatus.OK).json(article);
+  }
+
+  @Post('delete')
+  async deleteArticle(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { id: string },
+  ) {
+    const article = await this.userService.deleteArticle(body.id, user);
+    return res.status(HttpStatus.OK).json(article);
+  }
+
+  @Post('complete')
+  async toggleArticleCompleted(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { id: string },
+  ) {
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.userService.toggleArticleCompleted(body.id, user));
+  }
+
+  @Post('bookmark')
+  async setBookmark(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { id: string; bookmark: string },
+  ) {
+    await this.userService.setBookmark(body.id, body.bookmark, user);
+    return res.status(HttpStatus.OK);
+  }
+
+  @Post('progress')
+  async setProgress(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { id: string; progress: number },
+  ) {
+    await this.userService.setProgress(body.id, body.progress, user);
+    return res.status(HttpStatus.OK);
   }
 
   @Get('data')
   async getUserData(@Usr() user: User, @Res() res) {
     return res.status(HttpStatus.OK).json(user);
+  }
+
+  @Get('articles')
+  async getUserArticles(@Usr() user: User, @Res() res) {
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.userService.getUserArticles(user));
   }
 }

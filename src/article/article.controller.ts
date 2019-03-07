@@ -19,12 +19,6 @@ import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
-  @Get('get')
-  async getArticles(@Res() res) {
-    const posts = await this.articleService.getArticles();
-    return res.status(HttpStatus.OK).json(posts);
-  }
-
   @Get('get/:id')
   async getArticle(@Res() res, @Param('id', new ValidateObjectId()) id) {
     const article = await this.articleService.getArticle(id);
@@ -37,7 +31,6 @@ export class ArticleController {
   @Post('add')
   async addArticle(@Res() res, @Body() createArticleDTO: CreateArticleDTO) {
     const newArticle = await this.articleService.addArticle(createArticleDTO);
-    this.articleService.parseArticle(newArticle._id);
     return res.status(HttpStatus.OK).json({
       message: 'Article added successfully!',
       article: newArticle,
