@@ -16,7 +16,9 @@ export class AuthService {
 
   async register(user: User) {
     const userExists = await this.userService.findOneByEmail(user.email);
-    return !userExists ? this.userService.addUser(user) : undefined;
+    return !userExists
+      ? this.userService.addUser(user).then(() => this.createToken(user))
+      : undefined;
   }
 
   async signIn(login: JwtPayload): Promise<JwtToken | undefined> {
