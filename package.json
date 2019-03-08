@@ -26,6 +26,7 @@
     "@nestjs/mongoose": "^5.2.2",
     "@nestjs/passport": "^5.1.0",
     "bcrypt": "^3.0.4",
+    "http-proxy": "^1.17.0",
     "jsdom": "^13.2.0",
     "metascraper": "^4.10.1",
     "metascraper-author": "^4.10.1",
