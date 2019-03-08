@@ -40,6 +40,10 @@ export class AuthService {
     };
   }
 
+  async validateToken(tokenString: string): Promise<any> {
+    return this.jwtService.verifyAsync(tokenString);
+  }
+
   async validateUser(payload: JwtPayload): Promise<any> {
     return await this.userService.findOneByEmail(payload.email);
   }

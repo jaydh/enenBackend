@@ -44,4 +44,14 @@ export class AuthController {
           message: 'Invalid Credentials',
         });
   }
+
+  @Get('token/:token')
+  public async validateToken(@Response() res, @Param('token') token) {
+    const isValid = await this.authService.validateToken(token);
+    return token
+      ? res.status(HttpStatus.OK).json(isValid)
+      : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'Invalid Credentials',
+        });
+  }
 }
