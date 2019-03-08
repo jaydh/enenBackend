@@ -5,6 +5,7 @@ import { UserService } from '../user/user.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtToken } from './interfaces/jwt-token.interface';
 import { User } from '../user/interfaces/user.interface';
+import { CreateUserDTO } from '../user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -14,11 +15,12 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async register(user: User) {
-    const userExists = await this.userService.findOneByEmail(user.email);
-    return !userExists
-      ? this.userService.addUser(user).then(() => this.createToken(user))
-      : undefined;
+  async register(userDTO: CreateUserDTO) {
+    let user = await this.userService.findOneByEmail(userDTO.email);
+    if (!user) {
+      user = await this.userService.addUser(user);
+    }
+    return this.createToken(user);
   }
 
   async signIn(login: JwtPayload): Promise<JwtToken | undefined> {
