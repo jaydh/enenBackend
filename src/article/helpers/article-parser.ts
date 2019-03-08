@@ -33,7 +33,7 @@ export const parseHTML = async (url: string) => {
       return parsed;
     });
   const metadata = await metascraper({
-    html: parsed.content,
+    html: parsed && parsed.content,
     url,
   });
   return {
