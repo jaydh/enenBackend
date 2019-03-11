@@ -10,15 +10,14 @@ const isDev =
 
 async function bootstrap() {
   const options = { httpsOptions: undefined };
-  if (!isDev) {
-    const keyFile = fs.readFileSync(__dirname + '/ssl/privkey.pem');
-    const certFile = fs.readFileSync(__dirname + '/ssl/cert.pem');
-    options.httpsOptions = {
-      key: keyFile,
-      cert: certFile,
-    };
-  }
-  const app = await NestFactory.create(AppModule, { options });
+  console.log(isDev);
+  const keyFile = fs.readFileSync(__dirname + '/ssl/privkey.pem');
+  const certFile = fs.readFileSync(__dirname + '/ssl/cert.pem');
+  options.httpsOptions = {
+    key: keyFile,
+    cert: certFile,
+  };
+  const app = await NestFactory.create(AppModule, options);
 
   app.enableCors();
   await app.listen(4300);
