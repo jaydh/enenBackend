@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Res,
   HttpStatus,
   Param,
   NotFoundException,
@@ -20,20 +19,20 @@ export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
   @Get('/:id')
-  async getArticle(@Res() res, @Param('id', new ValidateObjectId()) id) {
+  async getArticle(@Param('id', new ValidateObjectId()) id) {
     const article = await this.articleService.getArticle(id);
     if (!article) {
       throw new NotFoundException('Article does not exist!');
     }
-    return res.status(HttpStatus.OK).json(article);
+    return article;
   }
 
   @Post()
-  async addArticle(@Res() res, @Body() createArticleDTO: CreateArticleDTO) {
+  async addArticle(@Body() createArticleDTO: CreateArticleDTO) {
     const newArticle = await this.articleService.addArticle(createArticleDTO);
-    return res.status(HttpStatus.OK).json({
+    return {
       message: 'Article added successfully!',
       article: newArticle,
-    });
+    };
   }
 }
