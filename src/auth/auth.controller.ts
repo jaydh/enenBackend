@@ -1,35 +1,23 @@
 import {
   Controller,
-  UseGuards,
   HttpStatus,
   Response,
-  Request,
+  Param,
   Get,
   Post,
   Body,
-  Put,
-  NotFoundException,
-  Res,
-  Param,
-  Delete,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
-import { CreateUserDTO } from '../user/dto/create-user.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
+import { UserPayload } from '../user/interfaces/user.interface';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  public async register(@Response() res, @Body() createUserDTO: CreateUserDTO) {
-    const result = await this.authService.register(createUserDTO);
+  public async register(@Response() res, @Body() userPayload: UserPayload) {
+    const result = await this.authService.register(userPayload);
     result
       ? res.status(HttpStatus.OK).json(result)
       : res.status(HttpStatus.BAD_REQUEST).json({ message: 'User exists' });

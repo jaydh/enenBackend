@@ -28,10 +28,20 @@ export class UserController {
     @Usr() user: User,
     @Body() body: { url: string },
   ) {
-    // tslint:disable:no-console
-    console.log(body);
     const article = await this.userService.saveArticle(body, user);
     return res.status(HttpStatus.OK).json(article);
+  }
+
+  @Post('connectEmail')
+  async connectEmail(
+    @Res() res,
+    @Usr() user: User,
+    @Body() body: { email: string },
+  ) {
+    const userM = await this.userService.setEmail(body.email, user);
+    return userM
+      ? res.status(HttpStatus.OK)
+      : res.status(HttpStatus.BAD_REQUEST);
   }
 
   @Post('delete')

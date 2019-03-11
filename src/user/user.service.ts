@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from '../article/interfaces/article.interface';
 import { UserArticle } from './interfaces/userArticle.interface';
-import { User } from './interfaces/user.interface';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { User, UserPayload } from './interfaces/user.interface';
 import { ArticleService } from '../article/article.service';
-import { ObjectId } from 'mongoose';
+import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -17,27 +16,38 @@ export class UserService {
     private readonly articleService: ArticleService,
   ) {}
 
-  public async getUser(id): Promise<User> {
+  public async getUserById(id: string): Promise<User> {
     const user = await this.userModel.findById(id).exec();
     return user;
   }
 
-  public async getUserArticles(user: User): Promise<any> {
+  public async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+    return user;
+  }
+
+  public async getUserByUsername(userName: string): Promise<User> {
+    const user = await this.userModel.findOne({ userName }).exec();
+    return user;
+  }
+
+  public async getUserArticles(user: User): Promise<UserArticle[]> {
     return user.articles;
   }
 
-  public async addUser(createUserDTO: CreateUserDTO): Promise<User> {
-    const newUser = await this.userModel(createUserDTO);
+  public async addUser(userPayload: UserPayload): Promise<User> {
+    const existingUser = await this.getUserByUsername(userPayload.userName);
+    if (existingUser) {
+      return undefined;
+    }
 
-    newUser.passwordHash = await this.getHash(newUser.password);
-    // clear password as we don't persist passwords
-    newUser.password = undefined;
+    const passwordHash = await this.getHash(userPayload.password);
+    const dto: CreateUserDTO = {
+      userName: userPayload.userName,
+      passwordHash,
+    };
+    const newUser = await this.userModel(dto);
     return newUser.save();
-  }
-
-  public async findOneByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email }).exec();
-    return user;
   }
 
   public async saveArticle(
@@ -65,6 +75,17 @@ export class UserService {
     userM.articles = userM.articles.filter((a: UserArticle) => {
       return !a.id.equals(id);
     });
+    return userM.save();
+  }
+
+  public async setEmail(
+    email: string,
+    user: User,
+  ): Promise<Model<User> | undefined> {
+    // If not email  return undefined
+
+    const userM: Model<User> = await this.userModel.findById(user._id).exec();
+    userM.email = email;
     return userM.save();
   }
 

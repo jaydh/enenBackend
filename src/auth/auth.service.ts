@@ -1,11 +1,9 @@
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
-import { InjectModel, PassportLocalModel } from 'mongoose';
 import { UserService } from '../user/user.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtToken } from './interfaces/jwt-token.interface';
-import { User } from '../user/interfaces/user.interface';
-import { CreateUserDTO } from '../user/dto/create-user.dto';
+import { User, UserPayload } from '../user/interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -15,16 +13,13 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async register(userDTO: CreateUserDTO) {
-    let user = await this.userService.findOneByEmail(userDTO.email);
-    if (!user) {
-      user = await this.userService.addUser(user);
-    }
-    return this.createToken(user);
+  async register(userPayload: UserPayload) {
+    const user = await this.userService.addUser(userPayload);
+    return user ? this.createToken(user) : undefined;
   }
 
   async signIn(login: JwtPayload): Promise<JwtToken | undefined> {
-    const user = await this.userService.findOneByEmail(login.email);
+    const user = await this.userService.getUserByUsername(login.userName);
     const validAuth = user
       ? await this.compareHash(login.password, user.passwordHash)
       : false;
@@ -32,9 +27,10 @@ export class AuthService {
   }
 
   async createToken(user: User): Promise<JwtToken> {
-    const expiresIn = 3600;
-    const accessToken = this.jwtService.sign({ email: user.email });
+    const accessToken = this.jwtService.sign({ userName: user.userName });
     return {
+      userName: user.userName,
+      email: user.email,
       expiresIn: 3600,
       accessToken,
     };
@@ -45,7 +41,7 @@ export class AuthService {
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {
-    return await this.userService.findOneByEmail(payload.email);
+    return await this.userService.getUserByUsername(payload.userName);
   }
 
   private async compareHash(
