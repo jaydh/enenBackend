@@ -5,4 +5,5 @@ export const ArticleSchema = new mongoose.Schema({
   metadata: Object,
   HTML: Object,
   fetching: Boolean,
+  completed: Boolean,
 });

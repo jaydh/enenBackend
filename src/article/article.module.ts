@@ -10,5 +10,6 @@ import { ArticleSchema } from './schemas/article.schema';
   ],
   providers: [ArticleService],
   controllers: [ArticleController],
+  exports: [ArticleService],
 })
 export class ArticleModule {}

@@ -2,11 +2,14 @@
 
 # dependencies
 /node_modules
-
+/dist
+/ssl
+/src/ssl
 
 # testing
 /coverage
 
+/src/keys.ts
 
 # misc
 .DS_Store
