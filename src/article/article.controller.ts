@@ -19,11 +19,7 @@ import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
-<<<<<<< HEAD
   @Get('/:id')
-=======
-  @Get('get/:id')
->>>>>>> dd7ede94c65490c2a498843e37e535289a36894a
   async getArticle(@Res() res, @Param('id', new ValidateObjectId()) id) {
     const article = await this.articleService.getArticle(id);
     if (!article) {
@@ -32,11 +28,7 @@ export class ArticleController {
     return res.status(HttpStatus.OK).json(article);
   }
 
-<<<<<<< HEAD
   @Post()
-=======
-  @Post('add')
->>>>>>> dd7ede94c65490c2a498843e37e535289a36894a
   async addArticle(@Res() res, @Body() createArticleDTO: CreateArticleDTO) {
     const newArticle = await this.articleService.addArticle(createArticleDTO);
     return res.status(HttpStatus.OK).json({
