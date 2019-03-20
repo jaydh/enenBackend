@@ -36,7 +36,8 @@ export class UserService {
   }
 
   public async addUser(userPayload: UserPayload): Promise<User> {
-    const existingUser = await this.getUserByUsername(userPayload.userName);
+    const lowerCaseUserName = userPayload.userName.toLowerCase();
+    const existingUser = await this.getUserByUsername(lowerCaseUserName);
     if (existingUser) {
       return undefined;
     }
