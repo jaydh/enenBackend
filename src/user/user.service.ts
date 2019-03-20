@@ -101,7 +101,6 @@ export class UserService {
   }
 
   public async setBookmark(user: User, articleId: string, bookmark: string) {
-    console.log(user);
     this.setArticleProperty(user._id, articleId, 'bookmark', bookmark);
   }
 

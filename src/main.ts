@@ -10,7 +10,6 @@ const isDev =
 
 async function bootstrap() {
   const options = { httpsOptions: undefined };
-  console.log(isDev);
   const keyFile = fs.readFileSync(__dirname + '/ssl/privkey.pem');
   const certFile = fs.readFileSync(__dirname + '/ssl/cert.pem');
   options.httpsOptions = {
