@@ -18,15 +18,15 @@ import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipes';
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
-  @Get('/:id')
-  async getArticleByID(@Param('id', new ValidateObjectId()) id) {
+  @Get('/id')
+  async getArticleByID(@Query('id', new ValidateObjectId()) id) {
     const article = await this.articleService.getArticle(id);
     return article ? article : { message: 'Article does not exist!' };
   }
 
   @Get('/url')
-  async getArticleByUrl(@Body() body: { url: string }) {
-    const article = await this.articleService.getArticleByUrl(body.url);
+  async getArticleByURL(@Query('url') url) {
+    const article = await this.articleService.getArticleByUrl(url);
     return article ? article : { message: 'Article does not exist!' };
   }
 
