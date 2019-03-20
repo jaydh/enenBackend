@@ -1,15 +1,15 @@
 import * as readability from 'readability-node';
 import { JSDOM } from 'jsdom';
+import he from 'he';
 
 // tslint:disable:no-var-requires
-
 const metascraper = require('metascraper')([
   require('metascraper-image')(),
   require('metascraper-logo')(),
   require('metascraper-clearbit-logo')(),
 ]);
 const Readability = readability.Readability;
-// tslint:disable:no-console
+
 export const parseHTML = async (url: string) => {
   const parsed = await JSDOM.fromURL(url, {})
     .then(dom => {
@@ -32,8 +32,10 @@ export const parseHTML = async (url: string) => {
 
       return parsed;
     });
+
+  const html = parsed && he.decode(parsed.contect);
   const metadata = await metascraper({
-    html: parsed && parsed.content,
+    html,
     url,
   });
   return {
