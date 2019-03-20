@@ -50,7 +50,7 @@ export class UserController {
     @Usr() user: User,
     @Body() body: { id: string; bookmark: string },
   ) {
-    await this.userService.setBookmark(body.id, body.bookmark, user);
+    await this.userService.setBookmark(user, body.id, body.bookmark);
     return 'Success';
   }
 
@@ -59,7 +59,7 @@ export class UserController {
     @Usr() user: User,
     @Body() body: { id: string; progress: number },
   ) {
-    await this.userService.setProgress(body.id, body.progress, user);
+    await this.userService.setProgress(user, body.id, body.progress);
     return 'Success';
   }
 

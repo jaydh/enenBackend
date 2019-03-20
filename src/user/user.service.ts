@@ -101,6 +101,7 @@ export class UserService {
   }
 
   public async setBookmark(user: User, articleId: string, bookmark: string) {
+    console.log(user);
     this.setArticleProperty(user._id, articleId, 'bookmark', bookmark);
   }
 
@@ -110,12 +111,14 @@ export class UserService {
 
   private async setArticleProperty(
     uid: string,
-    id: string,
+    articleId: string,
     property: string,
     value: string | number | boolean,
   ) {
-    const userM: Model<User> = await this.userModel.findById(id).exec();
-    const index = userM.articles.findIndex((a: UserArticle) => a.id.equals(id));
+    const userM: Model<User> = await this.userModel.findById(uid).exec();
+    const index = userM.articles.findIndex((a: UserArticle) =>
+      a.id.equals(articleId),
+    );
 
     userM.articles[index].property = value;
     userM.markModified('articles');
