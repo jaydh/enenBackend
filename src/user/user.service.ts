@@ -94,24 +94,29 @@ export class UserService {
     const userM: Model<User> = await this.userModel.findById(user._id).exec();
     const index = userM.articles.findIndex((a: UserArticle) => a.id.equals(id));
     const completedOn = userM.articles[index].completedOn;
+
     userM.articles[index].completedOn = completedOn ? undefined : new Date();
     userM.markModified('articles');
     return userM.save();
   }
 
   public async setBookmark(id: string, bookmark: string, user: User) {
-    const userM: Model<User> = await this.userModel.findById(user._id).exec();
-    const index = userM.articles.findIndex((a: UserArticle) => a.id.equals(id));
-    userM.articles[index].bookmark = bookmark;
-
-    userM.markModified('articles');
-    userM.save();
+    this.setArticleProperty(id, 'bookmark', bookmark);
   }
 
-  public async setProgress(id: string, progress: number, user: User) {
-    const userM: Model<User> = await this.userModel.findById(user._id).exec();
+  public async setProgress(id: string, progress: number) {
+    this.setArticleProperty(id, 'progress', progress);
+  }
+
+  private async setArticleProperty(
+    id: string,
+    property: string,
+    value: string | number | boolean,
+  ) {
+    const userM: Model<User> = await this.userModel.findById(id).exec();
     const index = userM.articles.findIndex((a: UserArticle) => a.id.equals(id));
-    userM.articles[index].progress = progress;
+
+    userM.articles[index].property = value;
     userM.markModified('articles');
     userM.save();
   }
