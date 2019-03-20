@@ -24,7 +24,7 @@ export class ArticleController {
     return article ? article : { message: 'Article does not exist!' };
   }
 
-  @Get('/url/:url')
+  @Get('/url')
   async getArticleByUrl(@Body() body: { url: string }) {
     const article = await this.articleService.getArticleByUrl(body.url);
     return article ? article : { message: 'Article does not exist!' };
