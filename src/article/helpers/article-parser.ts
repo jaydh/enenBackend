@@ -1,6 +1,6 @@
 import * as readability from 'readability-node';
 import { JSDOM } from 'jsdom';
-import he from 'he';
+import * as he from 'he';
 
 // tslint:disable:no-var-requires
 const metascraper = require('metascraper')([
@@ -11,6 +11,7 @@ const metascraper = require('metascraper')([
 const Readability = readability.Readability;
 
 export const parseHTML = async (url: string) => {
+  console.log(url);
   const parsed = await JSDOM.fromURL(url, {})
     .then(dom => {
       const loc = dom.window.location;
@@ -33,7 +34,7 @@ export const parseHTML = async (url: string) => {
       return parsed;
     });
 
-  const html = parsed && he.decode(parsed.contect);
+  const html = parsed && he.decode(parsed.content);
   const metadata = await metascraper({
     html,
     url,

@@ -34,6 +34,8 @@ export class ArticleService {
       await article.save();
       // Intentionally not waiting for parse to return article id to user
       this.parseArticle(article._id);
+    } else if (!article.metadata) {
+      this.parseArticle(article._id);
     }
     return article;
   }
