@@ -21,19 +21,13 @@ export class ArticleController {
   @Get('/:id')
   async getArticleByID(@Param('id', new ValidateObjectId()) id) {
     const article = await this.articleService.getArticle(id);
-    if (!article) {
-      throw new NotFoundException('Article does not exist!');
-    }
-    return article;
+    return article ? article : { message: 'Article does not exist!' };
   }
 
   @Get('/url/:url')
-  async getArticleByUrl(@Param('url') url) {
-    const article = await this.articleService.getArticleByUrl(url);
-    if (!article) {
-      throw new NotFoundException('Article does not exist!');
-    }
-    return article;
+  async getArticleByUrl(@Body() body: { url: string }) {
+    const article = await this.articleService.getArticleByUrl(body.url);
+    return article ? article : { message: 'Article does not exist!' };
   }
 
   @Post()
