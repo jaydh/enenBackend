@@ -100,15 +100,16 @@ export class UserService {
     return userM.save();
   }
 
-  public async setBookmark(id: string, bookmark: string, user: User) {
-    this.setArticleProperty(id, 'bookmark', bookmark);
+  public async setBookmark(user: User, articleId: string, bookmark: string) {
+    this.setArticleProperty(user._id, articleId, 'bookmark', bookmark);
   }
 
-  public async setProgress(id: string, progress: number) {
-    this.setArticleProperty(id, 'progress', progress);
+  public async setProgress(user: User, articleId: string, progress: number) {
+    this.setArticleProperty(user._id, articleId, 'progress', progress);
   }
 
   private async setArticleProperty(
+    uid: string,
     id: string,
     property: string,
     value: string | number | boolean,
