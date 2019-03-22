@@ -61,10 +61,10 @@ export class UserService {
     let article = await this.articleService.getArticleByUrl(url);
     if (!article) {
       article = await this.articleService.addArticle({ url });
-      await this.articleService.parseArticle(article._id);
+      this.articleService.parseArticle(article._id);
     }
     // No dupes
-    if (userM && !this.articleExists(userM, article._id)) {
+    if (userM && !user.articles.includes(article._id)) {
       userM.articles.push({ id: article._id, addedAt: now });
       userM.save();
     }
@@ -122,12 +122,6 @@ export class UserService {
     userM.articles[index].property = value;
     userM.markModified('articles');
     userM.save();
-  }
-
-  private articleExists(user: User, id: ObjectId): boolean {
-    return (
-      user.articles.find((t: UserArticle) => id.equals(t.id)) !== undefined
-    );
   }
 
   private async getHash(password: string | undefined): Promise<string> {
