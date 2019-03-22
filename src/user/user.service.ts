@@ -64,7 +64,7 @@ export class UserService {
       await this.articleService.parseArticle(article._id);
     }
     // No dupes
-    if (user && !this.articleExists(userM, article._id)) {
+    if (userM && !this.articleExists(userM, article._id)) {
       userM.articles.push({ id: article._id, addedAt: now });
       userM.save();
     }
